@@ -172,16 +172,17 @@ message MsgConfirmLogicCallResponse {}
 // issued to the Cosmos address in question
 // -------------
 message MsgDepositClaim {
-  uint64 event_nonce    = 1;
-  uint64 block_height   = 2;
-  string token_contract = 3;
-  string amount         = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
+  uint64 event_nonce          = 1;
+  uint64 block_height         = 2;
+  uint64 current_valset_nonce = 3;
+  string token_contract       = 4;
+  string amount               = 5 [
+    (gogoproto.customtype)    = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)      = false
   ];
-  string ethereum_sender = 5;
-  string cosmos_receiver = 6;
-  string orchestrator    = 7;
+  string ethereum_sender      = 6;
+  string cosmos_receiver      = 7;
+  string orchestrator         = 8;
 }
 
 message MsgDepositClaimResponse {}
@@ -189,11 +190,12 @@ message MsgDepositClaimResponse {}
 // WithdrawClaim claims that a batch of withdrawal
 // operations on the bridge contract was executed.
 message MsgWithdrawClaim {
-  uint64 event_nonce    = 1;
-  uint64 block_height   = 2;
-  uint64 batch_nonce    = 3;
-  string token_contract = 4;
-  string orchestrator   = 5;
+  uint64 event_nonce          = 1;
+  uint64 block_height         = 2;
+  uint64 current_valset_nonce = 3;
+  uint64 batch_nonce          = 4;
+  string token_contract       = 5;
+  string orchestrator         = 6;
 }
 
 message MsgWithdrawClaimResponse {}
@@ -202,14 +204,15 @@ message MsgWithdrawClaimResponse {}
 // to learn about an ERC20 that someone deployed
 // to represent a Cosmos asset
 message MsgERC20DeployedClaim {
-  uint64 event_nonce    = 1;
-  uint64 block_height   = 2;
-  string cosmos_denom   = 3;
-  string token_contract = 4;
-  string name           = 5;
-  string symbol         = 6;
-  uint64 decimals       = 7;
-  string orchestrator   = 8;
+  uint64 event_nonce          = 1;
+  uint64 block_height         = 2;
+  uint64 current_valset_nonce = 3;
+  string cosmos_denom         = 4;
+  string token_contract       = 5;
+  string name                 = 6;
+  string symbol               = 7;
+  uint64 decimals             = 8;
+  string orchestrator         = 9;
 }
 
 message MsgERC20DeployedClaimResponse {}
@@ -217,11 +220,12 @@ message MsgERC20DeployedClaimResponse {}
 // This informs the Cosmos module that a logic
 // call has been executed
 message MsgLogicCallExecutedClaim {
-  uint64 event_nonce        = 1;
-  uint64 block_height       = 2;
-  bytes  invalidation_id    = 3;
-  uint64 invalidation_nonce = 4;
-  string orchestrator       = 5;
+  uint64 event_nonce          = 1;
+  uint64 block_height         = 2;
+  uint64 current_valset_nonce = 3;
+  bytes  invalidation_id      = 4;
+  uint64 invalidation_nonce   = 5;
+  string orchestrator         = 6;
 }
 
 message MsgLogicCallExecutedClaimResponse {}

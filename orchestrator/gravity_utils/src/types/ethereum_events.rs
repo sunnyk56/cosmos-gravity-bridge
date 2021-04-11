@@ -126,10 +126,15 @@ pub struct TransactionBatchExecutedEvent {
     /// of the Gravity solidity contract. Ensuring that these events can only be played
     /// back in order
     pub event_nonce: Uint256,
+    /// The validator set nonce in the gravity contract at this events block height
+    pub valset_nonce: Uint256,
 }
 
 impl TransactionBatchExecutedEvent {
-    pub fn from_log(input: &Log) -> Result<TransactionBatchExecutedEvent, GravityError> {
+    pub fn from_log(
+        input: &Log,
+        valset_nonce: Uint256,
+    ) -> Result<TransactionBatchExecutedEvent, GravityError> {
         if let (Some(batch_nonce_data), Some(erc20_data)) =
             (input.topics.get(1), input.topics.get(2))
         {
@@ -157,6 +162,7 @@ impl TransactionBatchExecutedEvent {
                     block_height,
                     erc20,
                     event_nonce,
+                    valset_nonce,
                 })
             }
         } else {
@@ -201,6 +207,8 @@ pub struct SendToCosmosEvent {
     pub event_nonce: Uint256,
     /// The block height this event occurred at
     pub block_height: Uint256,
+    /// The validator set nonce in the gravity contract at this events block height
+    pub valset_nonce: Uint256,
 }
 
 impl SendToCosmosEvent {
@@ -286,6 +294,8 @@ pub struct Erc20DeployedEvent {
     pub decimals: u8,
     pub event_nonce: Uint256,
     pub block_height: Uint256,
+    /// The validator set nonce in the gravity contract at this events block height
+    pub valset_nonce: Uint256,
 }
 
 impl Erc20DeployedEvent {
@@ -436,6 +446,8 @@ pub struct LogicCallExecutedEvent {
     pub return_data: Vec<u8>,
     pub event_nonce: Uint256,
     pub block_height: Uint256,
+    /// The validator set nonce in the gravity contract at this events block height
+    pub valset_nonce: Uint256,
 }
 
 impl LogicCallExecutedEvent {

@@ -25,7 +25,10 @@ pub fn get_correct_sig_for_address(
     panic!("Could not find that address!");
 }
 
-pub fn get_checkpoint_abi_encode(valset: &Valset, gravity_id: &str) -> Result<Vec<u8>, GravityError> {
+pub fn get_checkpoint_abi_encode(
+    valset: &Valset,
+    gravity_id: &str,
+) -> Result<Vec<u8>, GravityError> {
     let (eth_addresses, powers) = valset.filter_empty_addresses();
     Ok(encode_tokens(&[
         Token::FixedString(gravity_id.to_string()),
@@ -118,6 +121,32 @@ pub async fn get_valset_nonce(
             "state_lastValsetNonce()",
             &[],
             caller_address,
+            None,
+        )
+        .await?;
+    // the go represents all nonces as u64, there's no
+    // reason they should ever overflow without a user
+    // submitting millions or tens of millions of dollars
+    // worth of transactions. But we properly check and
+    // handle that case here.
+    let real_num = Uint256::from_bytes_be(&val);
+    Ok(downcast_uint256(real_num).expect("Valset nonce overflow! Bridge Halt!"))
+}
+
+/// Gets the validator set nonce at a given Ethereum block height
+pub async fn get_valset_nonce_at_block(
+    contract_address: EthAddress,
+    caller_address: EthAddress,
+    block_height: Uint256,
+    web3: &Web3,
+) -> Result<u64, Web3Error> {
+    let val = web3
+        .contract_call(
+            contract_address,
+            "state_lastValsetNonce()",
+            &[],
+            caller_address,
+            Some(block_height),
         )
         .await?;
     // the go represents all nonces as u64, there's no
@@ -142,6 +171,7 @@ pub async fn get_tx_batch_nonce(
             "lastBatchNonce(address)",
             &[erc20_contract_address.into()],
             caller_address,
+            None,
         )
         .await?;
     // the go represents all nonces as u64, there's no
@@ -166,6 +196,7 @@ pub async fn get_logic_call_nonce(
             "lastLogicCallNonce(bytes32)",
             &[Token::Bytes(invalidation_id)],
             caller_address,
+            None,
         )
         .await?;
     // the go represents all nonces as u64, there's no
@@ -189,6 +220,7 @@ pub async fn get_event_nonce(
             "state_lastEventNonce()",
             &[],
             caller_address,
+            None,
         )
         .await?;
     // the go represents all nonces as u64, there's no
@@ -207,23 +239,15 @@ pub async fn get_gravity_id(
     web3: &Web3,
 ) -> Result<Vec<u8>, Web3Error> {
     let val = web3
-        .contract_call(contract_address, "state_gravityId()", &[], caller_address)
+        .contract_call(
+            contract_address,
+            "state_gravityId()",
+            &[],
+            caller_address,
+            None,
+        )
         .await?;
     Ok(val)
-}
-
-/// Gets the ERC20 symbol, should maybe be upstreamed
-pub async fn get_erc20_symbol(
-    contract_address: EthAddress,
-    caller_address: EthAddress,
-    web3: &Web3,
-) -> Result<String, GravityError> {
-    let val_symbol = web3
-        .contract_call(contract_address, "symbol()", &[], caller_address)
-        .await?;
-    // Pardon the unwrap, but this is temporary code, intended only for the tests, to help them
-    // deal with a deprecated feature (the symbol), which will be removed soon
-    Ok(String::from_utf8(val_symbol).unwrap())
 }
 
 /// Just a helper struct to represent the cost of actions on Ethereum

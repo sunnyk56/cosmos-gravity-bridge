@@ -8,6 +8,7 @@ use deep_space::Fee;
 use deep_space::Msg;
 use deep_space::{coin::Coin, utils::bytes_to_hex_str};
 use ethereum_gravity::utils::downcast_uint256;
+use ethereum_gravity::utils::get_valset_nonce_at_block;
 use gravity_proto::cosmos_sdk_proto::cosmos::base::abci::v1beta1::TxResponse;
 use gravity_proto::cosmos_sdk_proto::cosmos::tx::v1beta1::service_client::ServiceClient as TxServiceClient;
 use gravity_proto::cosmos_sdk_proto::cosmos::tx::v1beta1::BroadcastMode;
