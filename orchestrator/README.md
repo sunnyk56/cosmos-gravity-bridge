@@ -1,0 +1,6 @@
+First run
+
+1. sudo dnf install openssl-devel perl 
+2. cargo check --all    
+3. cargo test --all
+

@@ -1,10 +1,15 @@
 ## Building
 
 On first run:
-make proto-update-deps
-make proto-tools
-To build:
+sudo dnf install make automake gcc gcc-c++ kernel-devel
 make
+make test
+make proto-update-deps
+sudo make proto-tools
+
+Consequent builds and test:
+make
+make test
 
 ## Early MVP
 
