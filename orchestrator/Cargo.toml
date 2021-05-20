@@ -4,3 +4,4 @@ default-members = ["orchestrator"]
 
 
 [patch.crates-io]
+clarity = { path = '/home/justin/repos/clarity' }

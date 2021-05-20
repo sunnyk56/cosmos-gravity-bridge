@@ -13,6 +13,9 @@ import {
 } from "../test-utils/pure";
 import { openStdin } from "node:process";
 import { format } from "prettier";
+import { Signer } from "node:crypto";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { AbiCoder } from "@ethersproject/abi";
 
 chai.use(solidity);
 const { expect } = chai;
@@ -319,4 +322,101 @@ describe("updateValset Go test hash", function () {
     })
     console.log("abiEncodedValset:", abiEncodedValset)
     console.log("valsetDigest:", valsetDigest)
+})});
+
+// This test produces a hash for the contract which should match what is being used in the Go unit tests. It's here for
+// the use of anyone updating the Go tests.
+describe("updateValset Tx encoding", function () {
+  it.only("produces tx", async function () {
+
+
+     // DEPLOY CONTRACTS
+    // ================
+
+    const signers = await ethers.getSigners();
+    const gravityId = ethers.utils.formatBytes32String("foo");
+
+    const valset0 = {
+      // This is the power distribution on the Cosmos hub as of 7/14/2020
+      powers: examplePowers(),
+      validators: signers.slice(0, examplePowers().length),
+      valsetNonce: 0,
+      rewardAmount: 0,
+      rewardToken: ZeroAddress
+    }
+
+
+    const powerThreshold = 6666;
+
+    const {
+      gravity,
+      testERC20,
+      checkpoint: deployCheckpoint
+    } = await deployContracts(gravityId, powerThreshold, valset0.validators, valset0.powers);
+
+
+
+
+    // UDPATEVALSET
+    // ============
+
+    const valset1 = (() => {
+      // Make new valset by modifying some powers
+      let powers = examplePowers();
+      powers[0] -= 3;
+      powers[1] += 3;
+      let validators = signers.slice(0, powers.length);
+
+      return {
+        powers: powers,
+        validators: validators,
+        valsetNonce: 1,
+        rewardAmount: 0,
+        rewardToken: ZeroAddress
+      }
+    })()
+
+    // redefine valset0 and 1 with strings for 'validators'
+    const valset0_str = {
+      powers: valset0.powers,
+      validators: await getSignerAddresses(valset0.validators),
+      valsetNonce: valset0.valsetNonce,
+      rewardAmount: valset0.rewardAmount,
+      rewardToken: valset0.rewardToken
+    }
+    const valset1_str = {
+      powers: valset1.powers,
+      validators: await getSignerAddresses(valset1.validators),
+      valsetNonce: valset1.valsetNonce,
+      rewardAmount: valset1.rewardAmount,
+      rewardToken: valset1.rewardToken
+    }
+
+    const checkpoint1 = makeCheckpoint(
+      valset1_str.validators,
+      valset1_str.powers,
+      valset1_str.valsetNonce,
+      valset1_str.rewardAmount,
+      valset1_str.rewardToken,
+      gravityId
+    );
+
+    let sigs1 = await signHash(valset0.validators, checkpoint1);
+
+
+    let res = await gravity.updateValset(
+      valset1_str,
+
+      valset0_str,
+
+      sigs1.v,
+      sigs1.r,
+      sigs1.s
+    );
+    console.log(res.data)
+
+    expect((await gravity.functions.state_lastValsetCheckpoint())[0]).to.equal(checkpoint1);
+
+
+
 })});

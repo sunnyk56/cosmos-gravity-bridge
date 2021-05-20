@@ -211,6 +211,7 @@ impl Valset {
         signatures: &[T],
     ) -> Result<Vec<GravitySignature>, GravityError> {
         let status = self.get_signature_status(signed_message, signatures)?;
+        return Ok(status.ordered_signatures);
         // now that we have collected the signatures we can determine if the measure has the votes to pass
         // and error early if it does not, otherwise the user will pay fees for a transaction that will
         // just throw
