@@ -38,7 +38,7 @@ async fn main() {
     // handle global config here
     let address_prefix = opts.address_prefix;
     let home_dir = get_home_dir(opts.home);
-    let _config = load_config(&home_dir);
+    let config = load_config(&home_dir);
 
     // control flow for the command structure
     match opts.subcmd {

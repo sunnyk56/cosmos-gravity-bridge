@@ -20,15 +20,29 @@ pub const CONFIG_FOLDER: &str = ".gbt";
 
 /// Global configuration struct for Gravity bridge tools
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Default)]
-pub struct GravityBridgeToolsConfig {}
+pub struct GravityBridgeToolsConfig {
+    relayer: RelayerConfig,
+    orchestrator: OrchestratorConfig,
+}
 
 /// Relayer configuration options
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Default)]
-pub struct Relayer {}
+pub struct RelayerConfig {}
 
 /// Orchestrator configuration options
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Default)]
-pub struct Orchestrator {}
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+pub struct OrchestratorConfig {
+    /// If this Orchestrator should run an integrated relayer or not
+    relayer_enabled: bool,
+}
+
+impl Default for OrchestratorConfig {
+    fn default() -> Self {
+        OrchestratorConfig {
+            relayer_enabled: true,
+        }
+    }
+}
 
 /// The keys storage struct, including encrypted and un-encrypted local keys
 /// un-encrypted keys provide for orchestrator start and relayer start functions
