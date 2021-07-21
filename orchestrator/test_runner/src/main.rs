@@ -41,17 +41,18 @@ const OPERATION_TIMEOUT: Duration = Duration::from_secs(30);
 const TOTAL_TIMEOUT: Duration = Duration::from_secs(300);
 
 // Retrieve values from runtime ENV vars
+//TODO changed ip
 lazy_static! {
     static ref ADDRESS_PREFIX: String =
         env::var("ADDRESS_PREFIX").unwrap_or_else(|_| CosmosAddress::DEFAULT_PREFIX.to_owned());
     static ref STAKING_TOKEN: String =
         env::var("STAKING_TOKEN").unwrap_or_else(|_| "stake".to_owned());
     static ref COSMOS_NODE_GRPC: String =
-        env::var("COSMOS_NODE_GRPC").unwrap_or_else(|_| "http://localhost:9090".to_owned());
+        env::var("COSMOS_NODE_GRPC").unwrap_or_else(|_| "http://143.244.147.226:9090".to_owned());
     static ref COSMOS_NODE_ABCI: String =
-        env::var("COSMOS_NODE_ABCI").unwrap_or_else(|_| "http://localhost:26657".to_owned());
+        env::var("COSMOS_NODE_ABCI").unwrap_or_else(|_| "http://143.244.147.226:26657".to_owned());
     static ref ETH_NODE: String =
-        env::var("ETH_NODE").unwrap_or_else(|_| "http://localhost:8545".to_owned());
+        env::var("ETH_NODE").unwrap_or_else(|_| "http://143.244.147.226:8545".to_owned());
 }
 
 /// this value reflects the contents of /tests/container-scripts/setup-validator.sh
@@ -88,7 +89,7 @@ pub fn get_test_token_name() -> String {
 }
 
 pub fn get_chain_id() -> String {
-    "gravity-test".to_string()
+    "testchain".to_string()
 }
 
 pub fn one_eth() -> Uint256 {
