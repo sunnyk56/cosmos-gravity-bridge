@@ -166,6 +166,10 @@ pub async fn test_valset_update(
         "Delegating {} to {} in order to generate a validator set update",
         amount, delegate_address
     );
+    info!(
+        "keys information {}  trying to see",
+        keys
+    );
     contact
         .delegate_to_validator(
             *delegate_address,
