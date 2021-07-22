@@ -167,7 +167,7 @@ pub async fn test_valset_update(
         amount, delegate_address
     );
     info!(
-        "keys information {}  trying to see",
+        "keys information {:?}  trying to see",
         keys
     );
     contact
