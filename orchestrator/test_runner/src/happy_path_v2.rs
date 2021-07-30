@@ -203,7 +203,7 @@ pub async fn deploy_cosmos_representing_erc20_and_check_adoption(
         if let Ok(res) = res {
             let erc20 = res.into_inner().erc20;
             info!(
-                "Successfully adopted {:?} token contract of {:?}",
+                "Successfully adopted {} token contract of {}",
                 token_to_send_to_eth, erc20
             );
             erc20_contract = Some(erc20);
@@ -211,7 +211,7 @@ pub async fn deploy_cosmos_representing_erc20_and_check_adoption(
         }
         delay_for(Duration::from_secs(1)).await;
         info!(
-            "logs after delay_for for 1 sec and TOTAL_TIMEOUT {} and start {}",
+            "logs after delay_for for 1 sec and TOTAL_TIMEOUT {:?} and start {:?}",
             TOTAL_TIMEOUT, start
         );
     }
