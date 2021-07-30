@@ -210,7 +210,15 @@ pub async fn deploy_cosmos_representing_erc20_and_check_adoption(
             break;
         }
         delay_for(Duration::from_secs(1)).await;
+        info!(
+            "logs after delay_for for 1 sec and TOTAL_TIMEOUT {} and start {}",
+            TOTAL_TIMEOUT, start
+        );
     }
+    info!(
+        "erc20_contract data {:?} information",
+        erc20_contract
+    );
     if erc20_contract.is_none() {
         panic!(
             "Cosmos did not adopt the ERC20 contract for {} it must be invalid in some way",
