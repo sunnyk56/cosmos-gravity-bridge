@@ -211,7 +211,7 @@ pub async fn deploy_cosmos_representing_erc20_and_check_adoption(
         }
         delay_for(Duration::from_secs(1)).await;
         info!(
-            "logs after delay_for for 1 sec and TOTAL_TIMEOUT {:?} and start {:?}",
+            "logs after delay_for for 1 sec and TOTAL_TIMEOUT {:#?} and start {:#?}",
             TOTAL_TIMEOUT, start
         );
     }
