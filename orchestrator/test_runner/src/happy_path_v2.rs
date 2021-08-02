@@ -195,6 +195,11 @@ pub async fn deploy_cosmos_representing_erc20_and_check_adoption(
     // the erc20 representing the cosmos asset on Ethereum
     let mut erc20_contract = None;
     while Instant::now() - start < TOTAL_TIMEOUT {
+
+        info!(
+            "grpc_client data {:#?} information",
+            grpc_client
+        );
         let res = grpc_client
             .denom_to_erc20(QueryDenomToErc20Request {
                 denom: token_to_send_to_eth.clone(),
