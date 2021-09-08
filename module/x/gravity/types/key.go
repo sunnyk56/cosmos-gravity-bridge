@@ -6,7 +6,7 @@ import (
 
 const (
 	// ModuleName is the name of the module
-	ModuleName = "leeway"
+	ModuleName = "gravity"
 
 	// StoreKey to be used when creating the KVStore
 	StoreKey = ModuleName
